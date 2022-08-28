@@ -1,5 +1,5 @@
-$3RandomWords = (Invoke-WebRequest "https://random-word-api.herokuapp.com/word?number=1&length=6").Content
-$Out1 = $3RandomWords.Replace('"','').Replace('[','').Replace(']','').Replace(',','.')
+$1RandomWord6Char = (Invoke-WebRequest "https://random-word-api.herokuapp.com/word?number=1&length=6").Content
+$Out1 = $1RandomWord6Char.Replace('"','').Replace('[','').Replace(']','').Replace(',','.')
 $FinalOutRandomWord = (Get-Culture).TextInfo.ToTitleCase($Out1)
 
 $SpecialChars = Get-Random ("!","@","#","$","%","&","*","?",".")
