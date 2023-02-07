@@ -1,7 +1,8 @@
 #Todo
 #Merge it all into one big for loop so it does the whole script consecutively on each RDSH in turn which would balance out users reconnecting nicely.
 #Uni parms
-#Auto detect, Collections and their SH from CB (localhost) 
+#Auto detect, Collections and their SH from CB (localhost)
+#May want to prevent new connections to all session hosts to prevent a logged of user connecting to another host which is due a restart
 
 #Requires -RunAsAdministrator
 Import-Module RemoteDesktop
@@ -17,14 +18,23 @@ foreach($SessionHost in $SessionHosts){
     $s = New-PSSession -computerName $SessionHost
     Invoke-Command -Session $s -Scriptblock {
 
-    #Message all users on the hosts
-    msg * "Server is shutting down in 90 seconds!"
+    #Message all users on the host
+    msg * "Server is shutting down in 15 minutes!"
 
     #Sleep
-    Start-Sleep -Seconds 60
+    Start-Sleep -Seconds 600
+
+    #Message all users on the host
+    msg * "Server is shutting down in 5 minutes!"
+
+    #Sleep
+    Start-Sleep -Seconds 180
+
+    #Message all users on the host
+    msg * "Server is shutting down, you will now be logged off!"
 
     #Initiate a graceful, 30 second notice shutdown
-    shutdown -r -t 30
+    shutdown -r -t 120
 
     # Get active sessions from broker
     $ActiveSessions = Get-RDUserSession -CollectionName "TestAGRDS" -ConnectionBroker $ConnectionBroker
@@ -44,7 +54,7 @@ foreach($SessionHost in $SessionHosts){
 #Set each host to be back in the pool and allowing connections every 180 seconds.
 foreach($SessionHost in $SessionHosts){
     #Sleep to allow reboot to finish.
-    Start-Sleep -Seconds 180
+    Start-Sleep -Seconds 300
     #Allow remote connections to host.
     Set-RDSessionHost -SessionHost $SessionHost -NewConnectionAllowed Yes -ConnectionBroker $ConnectionBroker
 }
